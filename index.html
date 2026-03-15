@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Gặp Mặt Giới Trẻ Altenberg 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #0284c7, #e11d48);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col items-center py-10 px-4">
+
+    <!-- Language Toggle -->
+    <div class="mb-8 bg-white/10 p-1.5 rounded-full backdrop-blur-md flex shadow-lg border border-white/20">
+        <button id="btn-vi" onclick="setLanguage('vi')" class="px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 bg-white text-slate-900 shadow">
+            🇻🇳 Tiếng Việt
+        </button>
+        <button id="btn-de" onclick="setLanguage('de')" class="px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 text-white hover:text-white/80">
+            🇩🇪 Deutsch
+        </button>
+    </div>
+
+    <!-- Leaflet Container -->
+    <div class="glass-panel w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden relative border border-white/40">
+        
+        <!-- Header Image -->
+        <div class="relative h-64 overflow-hidden bg-slate-800">
+            <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=1000&q=80" alt="Lều lửa trại" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/1000x400/1e293b/ffffff?text=Lều+Lửa+Trại'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+            
+            <!-- Badge -->
+            <div class="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg uppercase tracking-wide">
+                Summer 2026
+            </div>
+
+            <!-- Header Text Vietnamese -->
+            <div id="header-vi" class="absolute bottom-6 left-6 right-6 text-white">
+                <p class="text-brand-100 font-semibold tracking-wider text-sm mb-1 uppercase">Cộng đoàn ngoại kiều NRW</p>
+                <h1 class="text-4xl font-extrabold leading-tight mb-2">Gặp Mặt<br>Giới Trẻ</h1>
+            </div>
+
+            <!-- Header Text German -->
+            <div id="header-de" class="absolute bottom-6 left-6 right-6 text-white hidden">
+                <p class="text-brand-100 font-semibold tracking-wider text-sm mb-1 uppercase">NRW Auslandsgemeinde</p>
+                <h1 class="text-4xl font-extrabold leading-tight mb-2">Jugend<br>Treffen</h1>
+            </div>
+        </div>
+
+        <!-- Content Body -->
+        <div class="p-8">
+            
+            <!-- Date & Location Box -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div class="flex items-center gap-3 flex-1">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 shrink-0">
+                        <i class="fa-regular fa-calendar-days text-lg"></i>
+                    </div>
+                    <div>
+                        <p id="date-label-vi" class="text-xs text-slate-500 font-semibold uppercase">Thời gian</p>
+                        <p id="date-label-de" class="text-xs text-slate-500 font-semibold uppercase hidden">Datum</p>
+                        <p class="font-bold text-slate-800">10-12 / 07 / 2026</p>
+                    </div>
+                </div>
+                <div class="hidden sm:block w-px bg-slate-200"></div>
+                <div class="flex items-center gap-3 flex-1">
+                    <div class="w-10 h-10 rounded-full bg-accent-100 flex items-center justify-center text-accent-600 shrink-0">
+                        <i class="fa-solid fa-location-dot text-lg"></i>
+                    </div>
+                    <div>
+                        <p id="loc-label-vi" class="text-xs text-slate-500 font-semibold uppercase">Địa điểm</p>
+                        <p id="loc-label-de" class="text-xs text-slate-500 font-semibold uppercase hidden">Ort</p>
+                        <p class="font-bold text-slate-800">Altenberg, NRW</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activities Section -->
+            <div class="mb-8">
+                <h2 id="act-title-vi" class="text-xl font-extrabold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-accent-500"></i> Hoạt động nổi bật
+                </h2>
+                <h2 id="act-title-de" class="text-xl font-extrabold text-slate-800 mb-4 flex items-center gap-2 hidden">
+                    <i class="fa-solid fa-fire text-accent-500"></i> Programm-Highlights
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 hover:shadow-md transition">
+                        <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center text-yellow-600">
+                            <i class="fa-solid fa-cross"></i>
+                        </div>
+                        <span id="act-1-vi" class="font-semibold text-sm">Thánh lễ</span>
+                        <span id="act-1-de" class="font-semibold text-sm hidden">Heilige Messe</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 hover:shadow-md transition">
+                        <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                            <i class="fa-solid fa-campground"></i>
+                        </div>
+                        <span id="act-2-vi" class="font-semibold text-sm">Lửa trại</span>
+                        <span id="act-2-de" class="font-semibold text-sm hidden">Lagerfeuer</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 hover:shadow-md transition">
+                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                            <i class="fa-solid fa-guitar"></i>
+                        </div>
+                        <span id="act-3-vi" class="font-semibold text-sm">Ca hát</span>
+                        <span id="act-3-de" class="font-semibold text-sm hidden">Musik & Gesang</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex items-center gap-3 hover:shadow-md transition">
+                        <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                            <i class="fa-solid fa-volleyball"></i>
+                        </div>
+                        <span id="act-4-vi" class="font-semibold text-sm">Thể thao</span>
+                        <span id="act-4-de" class="font-semibold text-sm hidden">Sport & Action</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Section -->
+            <div class="mb-6">
+                <h2 id="price-title-vi" class="text-xl font-extrabold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-ticket text-brand-500"></i> Thông tin vé
+                </h2>
+                <h2 id="price-title-de" class="text-xl font-extrabold text-slate-800 mb-4 flex items-center gap-2 hidden">
+                    <i class="fa-solid fa-ticket text-brand-500"></i> Ticket-Infos
+                </h2>
+
+                <div class="space-y-3">
+                    <!-- Ticket 1 -->
+                    <div class="flex justify-between items-center bg-gradient-to-r from-emerald-50 to-white p-4 rounded-xl border border-emerald-100">
+                        <div>
+                            <h3 id="tic-1-vi" class="font-bold text-slate-800">Sinh viên (ưu đãi)</h3>
+                            <h3 id="tic-1-de" class="font-bold text-slate-800 hidden">Studierende (ermäßigt)</h3>
+                        </div>
+                        <div class="text-xl font-extrabold text-emerald-600">60€</div>
+                    </div>
+                    <!-- Ticket 2 -->
+                    <div class="flex justify-between items-center bg-gradient-to-r from-brand-50 to-white p-4 rounded-xl border border-brand-100">
+                        <div>
+                            <h3 id="tic-2-vi" class="font-bold text-slate-800">Sinh viên (bình thường)</h3>
+                            <h3 id="tic-2-de" class="font-bold text-slate-800 hidden">Studierende (regulär)</h3>
+                        </div>
+                        <div class="text-xl font-extrabold text-brand-600">80€</div>
+                    </div>
+                    <!-- Ticket 3 -->
+                    <div class="flex justify-between items-center bg-gradient-to-r from-purple-50 to-white p-4 rounded-xl border border-purple-100">
+                        <div>
+                            <h3 id="tic-3-vi" class="font-bold text-slate-800">Người đi làm</h3>
+                            <h3 id="tic-3-de" class="font-bold text-slate-800 hidden">Berufstätige</h3>
+                        </div>
+                        <div class="text-xl font-extrabold text-purple-600">120€</div>
+                    </div>
+                </div>
+                
+                <p id="price-note-vi" class="text-center text-xs text-slate-500 mt-3 font-medium">
+                    * Giá vé đã bao gồm toàn bộ chi phí ăn ở trong 3 ngày 2 đêm.
+                </p>
+                <p id="price-note-de" class="text-center text-xs text-slate-500 mt-3 font-medium hidden">
+                    * Alle Preise inkl. Unterkunft & Verpflegung für 3 Tage/2 Nächte.
+                </p>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col items-center justify-center text-center">
+                <h4 id="cta-title-vi" class="font-bold text-xl text-slate-800 mb-2">Đăng ký tham gia ngay!</h4>
+                <h4 id="cta-title-de" class="font-bold text-xl text-slate-800 mb-2 hidden">Jetzt anmelden!</h4>
+                <p id="cta-desc-vi" class="text-sm text-slate-500 mb-5">Nhấn vào nút bên dưới để điền form đăng ký</p>
+                <p id="cta-desc-de" class="text-sm text-slate-500 mb-5 hidden">Klicken Sie unten, um das Formular auszufüllen</p>
+                
+                <a href="https://example.com/register" target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto">
+                    <span id="cta-btn-vi">Đăng Ký Ngay</span>
+                    <span id="cta-btn-de" class="hidden">Jetzt Registrieren</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script for Language Toggling -->
+    <script>
+        function setLanguage(lang) {
+            // Button Styling Update
+            const btnVi = document.getElementById('btn-vi');
+            const btnDe = document.getElementById('btn-de');
+
+            if (lang === 'vi') {
+                btnVi.className = "px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 bg-white text-slate-900 shadow";
+                btnDe.className = "px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 text-white hover:text-white/80";
+            } else {
+                btnDe.className = "px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 bg-white text-slate-900 shadow";
+                btnVi.className = "px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 text-white hover:text-white/80";
+            }
+
+            // Elements mapping based on IDs
+            const elements = [
+                'header', 'date-label', 'loc-label', 
+                'act-title', 'act-1', 'act-2', 'act-3', 'act-4',
+                'price-title', 'tic-1', 'tic-2', 'tic-3', 'price-note',
+                'cta-title', 'cta-desc', 'cta-btn'
+            ];
+
+            elements.forEach(id => {
+                const elVi = document.getElementById(`${id}-vi`);
+                const elDe = document.getElementById(`${id}-de`);
+                
+                if (elVi && elDe) {
+                    if (lang === 'vi') {
+                        elVi.classList.remove('hidden');
+                        elDe.classList.add('hidden');
+                    } else {
+                        elVi.classList.add('hidden');
+                        elDe.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
